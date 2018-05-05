@@ -1,0 +1,27 @@
+{
+  "name": "todo-wtrm",
+  "version": "1.0.0",
+  "description": "TODO example with webpack typescript react mobx",
+  "main": "index.js",
+  "repository": "https://github.com/shbumba/todo-wtrm.git",
+  "author": "Shimba <sh.bumba@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "start": "webpack-dev-server --mode development --progress --colors --port 3000 --open --config webpack/webpack.config.js",
+    "build": "webpack --mode production --progress --colors --config webpack/webpack.config.js"
+  },
+  "devDependencies": {
+    "babel-loader": "^7.1.4",
+    "copy-webpack-plugin": "^4.5.1",
+    "file-loader": "^1.1.11",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "uglifyjs-webpack-plugin": "^1.2.5",
+    "webpack": "^4.7.0",
+    "webpack-cleanup-plugin": "^0.5.1",
+    "webpack-cli": "^2.1.2",
+    "webpack-dev-server": "^3.1.4",
+    "webpack-merge": "^4.1.2"
+  }
+}
