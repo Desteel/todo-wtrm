@@ -50,8 +50,7 @@ const getConfig = (name) => {
           },
         },
       },
-    },
-    devtool: 'cheap-module-eval-source-map'
+    }
   };
 
   if (uglify) {

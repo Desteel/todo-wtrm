@@ -21,8 +21,8 @@
     "node_modules"
   ],
   "plugins": [
-    /*"transform-es2015-destructuring",
-    "transform-es2015-parameters",
-    "transform-object-rest-spread"*/
+    "react-hot-loader/babel",
+    "transform-decorators-legacy",
+    "transform-class-properties"
   ]
 }
