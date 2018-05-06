@@ -1,0 +1,28 @@
+{
+  "presets": [
+    [
+      "es2015",
+      {
+        "modules": false
+      }
+    ],
+    [
+      "env",
+      {
+        "targets": {
+          "node": "current"
+        }
+      }
+    ],
+    "stage-0",
+    "react"
+  ],
+  "ignore": [
+    "node_modules"
+  ],
+  "plugins": [
+    /*"transform-es2015-destructuring",
+    "transform-es2015-parameters",
+    "transform-object-rest-spread"*/
+  ]
+}
