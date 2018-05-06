@@ -1,62 +1,24 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import {action, computed, observable} from 'mobx';
-import {inject, observer, Provider} from 'mobx-react';
-import {hot} from 'react-hot-loader'
+import React from 'react';
+import {hot} from 'react-hot-loader';
+import {Route, Router, Switch} from 'react-router';
+import {Link} from 'react-router-dom';
+import {TodoApp} from './../ToDo';
+import {NotFound} from "../NotFound";
 
-class TestAppStore {
-  @observable type = false;
-
-  @computed get typeState() {
-    return this.type;
-  }
-
-  @computed get typeString() {
-    return '' + this.type;
-  }
-
-  @action('toggle type')
-  toggleType() {
-    this.type = !this.type;
-  }
-}
-
-const testAppStore = new TestAppStore();
-
-const TestComponent = styled.div`
-  background-color: cornflowerblue;
-  color: white;
-  padding: 1rem;
-  border: 1px solid black;
-`;
-
-class TestApp extends Component {
-  render() {
-    const {typeString, toggleType} = this.props;
-
-    return <TestComponent>
-      Test App ({typeString})
-      <button onClick={toggleType}>toggle type</button>
-    </TestComponent>;
-  }
-}
-
-TestApp.propTypes = {
-  typeString: PropTypes.string.isRequired,
-  toggleType: PropTypes.func.isRequired
-};
-
-const TestAppWithStore = inject('testAppStore')(observer(({testAppStore}) => (
-  <TestApp typeString={testAppStore.typeString} toggleType={() => testAppStore.toggleType()}/>
-)));
-
-const stores = {testAppStore};
-
-const App = props => (
-  <Provider {...stores}>
-    <TestAppWithStore/>
-  </Provider>
-);
-
-export default hot(module)(App);
+export const App = hot(module)(({history}) => (
+  <Router history={history}>
+    <div>
+      <header>
+        <nav>
+          <ul>
+            <li><Link to='/'>Todo</Link></li>
+          </ul>
+        </nav>
+      </header>
+      <Switch>
+        <Route exact path="/" component={TodoApp}/>
+        <Route component={NotFound}/>
+      </Switch>
+    </div>
+  </Router>
+));
