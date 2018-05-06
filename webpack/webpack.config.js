@@ -2,19 +2,18 @@ const merge = require('webpack-merge');
 const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
 
 const paths = require('./extension/paths.ext');
-const uglifyjsExt = require('./extension/uglifyjs.ext');
 const extensionsDevelopment = require('./extension/extensions.development');
 const extensionsProduction = require('./extension/extensions.production');
 
-const getConfig = (name) => {
-  let uglify = name.indexOf('min') > -1;
+const isProduction = process.argv.indexOf('production') >= 0;
 
-  let common = {
+const getConfig = (name) => {
+  return {
     context: paths.src,
     entry: {},
     node: {
       fs: 'empty',
-      process: false
+      net: 'empty'
     },
     target: 'web',
     output: {
@@ -24,7 +23,7 @@ const getConfig = (name) => {
       sourceMapFilename: '[name]/app' + name + '.map'
     },
     resolve: {
-      extensions: ['.js', '.ts', '.tsx'],
+      extensions: ['.js'],
       // Fix webpack's default behavior to not load packages with jsnext:main module
       // (jsnext:main directs not usually distributable es6 format, but es6 sources)
       mainFields: ['module', 'browser', 'main'],
@@ -33,11 +32,11 @@ const getConfig = (name) => {
       }
     },
     plugins: [
-      new WebpackCleanupPlugin(),
+      new WebpackCleanupPlugin()
     ],
     optimization: {
       minimize: false,
-      runtimeChunk: { name: 'common' },
+      runtimeChunk: {name: 'common'},
       splitChunks: {
         cacheGroups: {
           default: false,
@@ -52,26 +51,16 @@ const getConfig = (name) => {
       },
     }
   };
-
-  if (uglify) {
-    common = merge([common, uglifyjsExt]);
-  }
-
-  return common;
 };
 
 module.exports = function () {
   let config = [];
   let list = [''];
 
-  if (process.env.NODE_ENV === 'production') {
-    list.push('.min');
-  }
-
   list.forEach((key) => {
     config.push(merge([
       getConfig(key),
-      (process.env.NODE_ENV === 'development') ? extensionsDevelopment : extensionsProduction
+      isProduction ? extensionsProduction : extensionsDevelopment
     ]));
   });
 

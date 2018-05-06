@@ -1,8 +1,8 @@
 const merge = require('webpack-merge');
 const commonList = require('./extensions.common');
-const babelExt = require('./babel.ext');
+const uglifyjsExt = require('./uglifyjs.ext');
 
 module.exports = merge([
   commonList,
-  babelExt
+  uglifyjsExt
 ]);

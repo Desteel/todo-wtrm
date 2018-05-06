@@ -22,7 +22,7 @@ const paths = {
   root: './../../',
   build: './../../dist/',
   src: './../../src/',
-  server: './../../dist/'
+  server: './../../'
 };
 
 module.exports = changeDir(paths);

@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
+import * as React from 'react';
 import {hot} from 'react-hot-loader';
 import {Route, Router, Switch} from 'react-router';
 import {Link} from 'react-router-dom';
-import {TodoApp} from './../ToDo';
+import {TodoApp} from '../ToDo';
 import {NotFound} from "../NotFound";
 
-class RootApp extends Component {
+class RootApp extends React.Component<any> {
   renderDevTool() {
     if (process.env.NODE_ENV !== 'production') {
       const DevTools = require('mobx-react-devtools').default;

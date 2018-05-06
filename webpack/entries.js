@@ -1,9 +1,9 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const paths = require('./extension/paths.ext');
 
-module.exports =  {
+module.exports = {
   entry: {
-    'app': paths.src + 'index.js'
+    'app': paths.src + 'index.tsx'
   },
   plugins: [
     new HtmlWebpackPlugin({
