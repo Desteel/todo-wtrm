@@ -8,11 +8,13 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "start": "webpack-dev-server --hot --env development --mode development --progress --colors --port 3030 --open --config webpack/webpack.config.js ",
+    "start:todo": "webpack-dev-server --hot --env development --mode development --progress --colors --port 3000 --open --config webpack/webpack.config.js ",
+    "start:server": "json-server --watch src/db.json --port 3080",
     "build:dev": "webpack --mode development --progress --colors --config webpack/webpack.config.js",
     "build:prod": "webpack -p --mode production --progress --colors --config webpack/webpack.config.js"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/classnames": "^2.2.3",
     "@types/node": "^10.0.4",
     "@types/react": "^16.3.13",
@@ -34,6 +36,7 @@
     "file-loader": "^1.1.11",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
+    "json-server": "^0.12.2",
     "mobx-react-devtools": "^5.0.1",
     "react-hot-loader": "^4.1.2",
     "typescript": "^2.8.3",
@@ -46,6 +49,7 @@
     "webpack-merge": "^4.1.2"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "mobx": "^4.2.1",
     "mobx-react": "^5.1.2",
     "mobx-react-router": "^4.0.3",

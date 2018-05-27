@@ -1,0 +1,28 @@
+{
+  "todo": [
+    {
+      "id": "ktb45ufv2bojh98s5skhc3ggj7kgtj3np4cr4g0o5xpa",
+      "text": "test 1",
+      "completed": false,
+      "removed": false
+    },
+    {
+      "id": "34g6g7tdtx8l3ehlc1600x51c5airf5ojcmr0f",
+      "text": "test 2",
+      "completed": true,
+      "removed": false
+    },
+    {
+      "id": "osg1w51qs43p98nwuw0kssj0",
+      "text": "test 3",
+      "completed": true,
+      "removed": false
+    },
+    {
+      "id": "59t5mvubspb0o4rka8lkfcg052n213w13t0",
+      "text": "test 4",
+      "completed": false,
+      "removed": false
+    }
+  ]
+}
