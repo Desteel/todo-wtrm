@@ -1,64 +1,73 @@
-import {action, computed, observable} from 'mobx';
+import { action, observable } from 'mobx';
+import { TTodoItem } from 'containers/ToDo/types';
 
 export class ToDoStore {
-  @observable type = false;
-  @observable items = [];
+  @observable private items: TTodoItem[] = [];
 
-  @computed get typeState() {
-    return this.type;
+  constructor() {
+    const items = [
+      'test1', 'test2', 'test3'
+    ]
+
+    items.forEach((item) => {
+      this.addItem(this.createItem(item))
+    })
   }
 
-  @computed get typeString() {
-    return '' + this.type;
+  private uniqueHash(): string {
+    return ('' + Date.now()).split('').reduce((prev, current) => (
+      prev + Math.random().toString(34).substring(1, parseInt(current))
+    ), '').replace(/\W+/g, '')
   }
 
-  get itemsList() {
+  private changeItem(foundItem: TTodoItem) {
+    this.items = this.items.map(item => (foundItem.id === item.id ? foundItem : item))
+  }
+
+  public get itemsList() {
     return this.items;
   }
 
-  @action('toggle type')
-  toggleType() {
-    this.type = !this.type;
-  }
-
-  uniqueHash() {
-    return ('' + Date.now()).split('').reduce((prev, current) => {
-      return prev + Math.random().toString(34).substring(1, parseInt(current));
-    }, '').replace(/\W+/g, '');
-  }
-
   @action('create todo item')
-  createItem(text) {
+  public createItem(text: string): TTodoItem {
     return {
       id: this.uniqueHash(),
       text,
       completed: false,
-      remove:false
+      removed: false
     }
   }
 
   @action('add new todo element')
-  addItem(item) {
+  public addItem(item) {
     this.items = [...this.items, item]
   }
 
-  getItemById(id) {
-    return this.items.filter(item => item.id === id);
+  @action('find element by id')
+  public findItemById(id) {
+    return this.items.filter(item => item.id === id)[0]
   }
 
-  @action('toggle remove todo item')
-  toggleRemoveItem(id) {
-    let foundItem = this.getItemById(id);
+  @action('toggle removed todo item')
+  public toggleRemoveItem(id) {
+    const foundItem = this.findItemById(id)
 
-    if (!foundItem.length) {
-      return;
-    }
+    if (!foundItem) return
 
-    foundItem = foundItem[0];
+    foundItem.removed = !foundItem.removed
 
-    foundItem.remove = !foundItem.remove;
+    this.changeItem(foundItem)
+  }
 
-    this.items = this.items.map(item => (foundItem.id === item.id ? foundItem : item));
+  @action('toggle complete todo item')
+  public toggleCompleteItem(id) {
+    const foundItem = this.findItemById(id)
+
+    if (!foundItem) return
+
+    foundItem.completed = !foundItem.completed
+
+    this.changeItem(foundItem)
   }
 }
 

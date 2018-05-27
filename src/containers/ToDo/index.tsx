@@ -1,103 +1,61 @@
-import * as React from 'react';
+import { inject, observer } from 'mobx-react';
 import PropTypes from 'prop-types';
-import {inject, observer} from 'mobx-react';
+import * as React from 'react';
 import * as STORE from './../../constants/store';
+import { ToDoStore } from 'stores/todo';
+import { TodoList, TodoItem, TodoItemCol, Todo, TodoButton } from './styles';
+import { TodoForm } from './form';
 
 @inject(STORE.TODO_STORE)
 @observer
 export class TodoApp extends React.Component {
-  static propTypes = {
+  private todoStore: ToDoStore = this.props[STORE.TODO_STORE]
+
+  public static propTypes = {
     onNewItem: PropTypes.func
-  };
-
-  static defaultProps = {
-    onNewItem: () => {}
-  };
-
-  state = {
-    items: []
-  };
-
-  constructor(props) {
-    super(props);
-
-    if (props.items) {
-      this.setState({
-        items: props.items
-      })
-    }
+  }
+  public static defaultProps = {
+    onNewItem: () => { }
   }
 
-  componentDidMount() {
-
-  }
-
-  toggleRemoveItem(id) {
-    const todoStore = this.props[STORE.TODO_STORE];
-
-    todoStore.toggleRemoveItem(id);
+  public toggleRemoveItem = (id: string) => {
+    this.todoStore.toggleRemoveItem(id);
   };
 
-  addItem(text) {
+  public toggleCompleteItem = (id: string) => {
+    this.todoStore.toggleCompleteItem(id);
+  };
+
+  public addItem = (text: string) => {
     if (text.length < 5) {
       console.error('Min lenght 5');
 
       return;
     }
 
-    const todoStore = this.props[STORE.TODO_STORE];
+    const newItem = this.todoStore.createItem(text);
 
-    const newItem = todoStore.createItem(text);
-
-    todoStore.addItem(newItem);
+    this.todoStore.addItem(newItem);
   }
 
-  render() {
-    const todoStore = this.props[STORE.TODO_STORE];
-    const items = todoStore.itemsList;
+  public render() {
+    const items = this.todoStore.itemsList
 
-    console.log(items);
-
-    return <div className='todo-items'>
-      <TodoForm onAddItem={ text => { this.addItem(text) } }></TodoForm>
-      <TodoList items={items} onChangeRemove={ id => { this.toggleRemoveItem(id) } }></TodoList>
-    </div>;
+    return <Todo>
+      <TodoForm onAddItem={this.addItem}></TodoForm>
+      <TodoList>
+        {items.map(({ id, text, removed, completed }) => (
+          <TodoItem key={id} isRemoved={removed} isCompleted={completed}>
+            <TodoItemCol>
+              {text}
+            </TodoItemCol>
+            <TodoItemCol>
+              <TodoButton onClick={() => this.toggleRemoveItem(id)}>{!removed ? 'delete' : 'back'}</TodoButton>
+              <TodoButton onClick={() => this.toggleCompleteItem(id)}>{!completed ? 'complete' : 'uncomplete'}</TodoButton>
+            </TodoItemCol>
+          </TodoItem>
+        ))}
+      </TodoList>
+    </Todo>;
   }
 }
-
-const TodoForm = ({ onAddItem = (text) => {} }) => {
-  let _text = '';
-
-  const submit = (event) => {
-    event.preventDefault();
-
-    onAddItem(_text.value);
-
-    _text.value = '';
-
-    _text.focus();
-  };
-
-  return <form className="todo-items__form" onSubmit={submit}>
-    <input ref={ input => _text = input } className="todo-items__input" type="text" placeholder="Input text" required/>
-    <span className="todo-items__submit btn" onClick={submit}>Send</span>
-  </form>
-};
-
-const TodoList = ({ items, onChangeRemove = (id: number) => {} }) => {
-  return <div className="todo-items__list">
-    {items.map(item =>
-      <TodoItem key={item.id} item={item} onChangeRemove={ () => onChangeRemove(item.id) }></TodoItem>)}
-  </div>;
-};
-
-const TodoItem = ({ item: { text, remove, completed }, onChangeRemove = () => {} }) => {
-  return <div className={ 'todo-items__item' + (remove ? ' todo-items__item--deleted' : '') }>
-    <div className="todo-items__col">
-      {text}
-    </div>
-    <div className="todo-items__col">
-      <div className="btn" onClick={onChangeRemove}>{ !remove ? 'delete' : 'back' }</div>
-    </div>
-  </div>;
-};

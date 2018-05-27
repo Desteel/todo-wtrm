@@ -1,14 +1,14 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {App} from './containers/App';
-import {configure} from 'mobx';
-import {Provider} from 'mobx-react';
-import {createBrowserHistory} from 'history';
-import {RouterStore} from './stores/router';
-import {ToDoStore} from './stores/todo';
+import { App } from './containers/App';
+import { configure } from 'mobx';
+import { Provider } from 'mobx-react';
+import { createBrowserHistory } from 'history';
+import { RouterStore } from './stores/router';
+import { ToDoStore } from './stores/todo';
 import * as STORE from './constants/store';
 
-configure({enforceActions: true});
+configure({ enforceActions: true });
 
 const history = createBrowserHistory();
 
@@ -19,6 +19,6 @@ const stores = {
 
 ReactDOM.render(
   <Provider {...stores}>
-    <App history={history}/>
+    <App history={history} />
   </Provider>, document.getElementById('app')
 );
