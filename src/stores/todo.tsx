@@ -1,17 +1,36 @@
 import { action, observable } from 'mobx';
 import { TTodoItem } from 'containers/ToDo/types';
+import axios, { AxiosResponse } from 'axios';
 
 export class ToDoStore {
   @observable private items: TTodoItem[] = [];
 
   constructor() {
-    const items = [
-      'test1', 'test2', 'test3'
-    ]
+    axios.get('/todo')
+      .then(action((response: AxiosResponse<TTodoItem[]>) => {
+        this.items = response.data.filter(item => {
+          if (item.removed) {
+            this.deleteItemResult(item)
+          }
 
-    items.forEach((item) => {
-      this.addItem(this.createItem(item))
-    })
+          return !item.removed
+        })
+      }))
+      .catch((error) => {
+        console.error('Request error', error)
+      })
+  }
+
+  private sendItemResult(item) {
+    return axios.post('/todo', item)
+  }
+
+  private updateItemResult(item) {
+    return axios.put(`/todo/${item.id}`, item)
+  }
+
+  private deleteItemResult(item) {
+    return axios.delete(`/todo/${item.id}`)
   }
 
   private uniqueHash(): string {
@@ -20,8 +39,11 @@ export class ToDoStore {
     ), '').replace(/\W+/g, '')
   }
 
-  private changeItem(foundItem: TTodoItem) {
-    this.items = this.items.map(item => (foundItem.id === item.id ? foundItem : item))
+  @action('change item')
+  private async changeItem(foundItem: TTodoItem) {
+    await this.updateItemResult(foundItem).then(action(() => {
+      this.items = this.items.map(item => (foundItem.id === item.id ? foundItem : item))
+    }))
   }
 
   public get itemsList() {
@@ -40,7 +62,9 @@ export class ToDoStore {
 
   @action('add new todo element')
   public addItem(item) {
-    this.items = [...this.items, item]
+    this.sendItemResult(item).then(action(() => {
+      this.items = [...this.items, item]
+    }))
   }
 
   @action('find element by id')
@@ -48,7 +72,7 @@ export class ToDoStore {
     return this.items.filter(item => item.id === id)[0]
   }
 
-  @action('toggle removed todo item')
+  @action('toggle remove todo item')
   public toggleRemoveItem(id) {
     const foundItem = this.findItemById(id)
 

@@ -7,6 +7,9 @@ import { createBrowserHistory } from 'history';
 import { RouterStore } from './stores/router';
 import { ToDoStore } from './stores/todo';
 import * as STORE from './constants/store';
+import axios from 'axios';
+
+axios.defaults.baseURL = 'http://localhost:3080';
 
 configure({ enforceActions: true });
 
